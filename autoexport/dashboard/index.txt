@@ -1,73 +1,555 @@
-AutoExport
-Dashboard de sourcing
-PAÍS DE ORIGEN
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoExport Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#C8F04A;--brand-d:#9BBF2A;--dark:#111210;--s1:#1A1C18;--s2:#222520;--s3:#2A2D26;
+  --border:rgba(255,255,255,0.08);--text:#F0F2EC;--muted:#8A8E82;
+  --danger:#FF5C3A;--warn:#F0A830;--success:#C8F04A;
+}
+body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh}
+a{color:inherit;text-decoration:none}
 
-🇩🇪 Alemania
-—
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{
+  width:250px;min-width:250px;background:var(--s1);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow-y:auto;padding:0 0 20px
+}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 
-🇫🇷 Francia
-—
+/* ── SIDEBAR ── */
+.logo{
+  font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--brand);
+  padding:20px;border-bottom:1px solid var(--border);letter-spacing:-0.5px;line-height:1.2
+}
+.logo small{display:block;font-size:11px;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400;margin-top:3px}
+.slabel{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:18px 20px 8px}
+.fgroup{padding:0 14px 6px}
+.frow{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 4px;border-bottom:1px solid var(--border);font-size:12px
+}
+.frow:last-child{border-bottom:none}
+.frow label{display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--text)}
+.frow input[type=checkbox]{accent-color:var(--brand);width:13px;height:13px;cursor:pointer}
+.pill{font-size:10px;background:var(--s3);color:var(--muted);padding:2px 7px;border-radius:20px}
 
-🇧🇪 Bélgica
-—
+.slider-wrap{padding:2px 4px 12px}
+.slider-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px}
+.slider-labels strong{color:var(--brand);font-size:12px}
+input[type=range]{width:100%;accent-color:var(--brand);cursor:pointer}
 
-🇵🇱 Polonia
-—
+.src-item{display:flex;align-items:center;gap:9px;padding:7px 4px;border-bottom:1px solid var(--border);font-size:12px}
+.src-item:last-child{border-bottom:none}
+.src-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.src-name{flex:1;color:var(--text)}
+.src-badge{font-size:10px;padding:2px 7px;border-radius:8px}
+.ok{background:rgba(200,240,74,.12);color:var(--brand)}
+.cfg{background:rgba(240,168,48,.12);color:var(--warn)}
 
-🇵🇹 Portugal
-—
-PRECIO MÁX. COMPRA
-5.000€
-30.000€
-50.000€
-CATEGORÍA
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--s1);border-bottom:1px solid var(--border);
+  padding:12px 22px;display:flex;align-items:center;gap:12px
+}
+.search{
+  flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none
+}
+.search::placeholder{color:var(--muted)}
+.search:focus{border-color:var(--brand)}
+.btn{
+  background:var(--brand);color:var(--dark);border:none;border-radius:8px;
+  padding:9px 16px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  cursor:pointer;white-space:nowrap;letter-spacing:.3px
+}
+.btn:hover{background:var(--brand-d)}
+.btn-g{
+  background:transparent;border:1px solid var(--border);color:var(--muted);
+  border-radius:8px;padding:9px 13px;font-family:'DM Sans',sans-serif;
+  font-size:12px;cursor:pointer
+}
+.btn-g:hover{border-color:var(--brand);color:var(--brand)}
 
-Muscle / Americanos
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 22px 0}
+.stat{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 15px}
+.stat .lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px}
+.stat .val{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;line-height:1}
+.stat .val.g{color:var(--brand)}
+.stat .sub{font-size:11px;color:var(--muted);margin-top:3px}
 
-Pickup Trucks
+/* ── GRID ── */
+.grid{
+  flex:1;overflow-y:auto;padding:14px 22px 22px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:13px;align-content:start
+}
 
-SUV grandes
+/* ── CARD ── */
+.card{
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;cursor:pointer;transition:border-color .15s,transform .15s
+}
+.card:hover{border-color:var(--brand);transform:translateY(-2px)}
+.card-img{
+  width:100%;height:135px;background:var(--s2);display:flex;
+  align-items:center;justify-content:center;position:relative;font-size:42px;opacity:.5
+}
+.badge-src{
+  position:absolute;top:8px;right:8px;font-size:10px;
+  padding:3px 7px;border-radius:4px;background:rgba(0,0,0,.7);
+  color:var(--brand);border:1px solid rgba(200,240,74,.25)
+}
+.badge-score{
+  position:absolute;top:8px;left:8px;font-family:'Syne',sans-serif;
+  font-size:12px;font-weight:700;padding:3px 8px;border-radius:4px
+}
+.sc-hi{background:rgba(200,240,74,.18);color:var(--brand);border:1px solid rgba(200,240,74,.35)}
+.sc-mid{background:rgba(240,168,48,.18);color:var(--warn);border:1px solid rgba(240,168,48,.35)}
+.sc-lo{background:rgba(255,92,58,.18);color:var(--danger);border:1px solid rgba(255,92,58,.35)}
+.card-body{padding:11px 14px 14px}
+.card-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:1px}
+.card-sub{font-size:12px;color:var(--muted);margin-bottom:9px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.tag{font-size:10px;padding:2px 7px;border-radius:4px;background:var(--s3);color:var(--muted);border:1px solid var(--border)}
+.tag.hl{background:rgba(200,240,74,.1);color:var(--brand);border-color:rgba(200,240,74,.2)}
+.price-row{display:flex;align-items:flex-end;justify-content:space-between;padding-top:9px;border-top:1px solid var(--border)}
+.buy-price{font-family:'Syne',sans-serif;font-size:19px;font-weight:700}
+.profit-info{text-align:right}
+.mchip{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;display:inline-block}
+.m-hi{background:rgba(200,240,74,.15);color:var(--brand)}
+.m-mid{background:rgba(240,168,48,.15);color:var(--warn)}
+.profit-num{font-size:11px;color:var(--muted);margin-top:2px}
+.profit-num strong{color:var(--success)}
 
-Sport / Performance
+/* ── MODAL ── */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  display:flex;align-items:center;justify-content:center;z-index:100;
+  padding:20px;opacity:0;pointer-events:none;transition:opacity .2s
+}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--s1);border:1px solid var(--border);border-radius:16px;
+  width:100%;max-width:540px;padding:28px;position:relative;max-height:90vh;overflow-y:auto
+}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  background:var(--s3);border:none;color:var(--muted);
+  width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px
+}
+.modal-close:hover{color:var(--text)}
+.modal-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+.calc-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--border);font-size:13px
+}
+.calc-row:last-child{border-bottom:none}
+.calc-row .clbl{color:var(--muted)}
+.calc-row .cval{font-weight:500}
+.calc-row .cval.r{color:var(--danger)}
+.calc-row .cval.g{color:var(--brand)}
+.calc-total{
+  margin-top:12px;padding:14px;background:var(--s3);border-radius:10px;
+  display:flex;justify-content:space-between;align-items:center
+}
+.calc-total .tl{font-size:12px;color:var(--muted)}
+.calc-total .tv{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--brand)}
+.modal-link{
+  display:block;margin-top:16px;text-align:center;
+  background:var(--brand);color:var(--dark);border-radius:8px;padding:11px;
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;letter-spacing:.3px
+}
+.modal-link:hover{background:var(--brand-d)}
 
-Descapotables
-SCORE MÍNIMO
-0
-60
-100
-FUENTES
+/* ── EMPTY / LOADER ── */
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+.loader{display:flex;justify-content:center;align-items:center;gap:6px;padding:40px}
+.loader span{width:8px;height:8px;border-radius:50%;background:var(--brand);animation:pulse 1.2s infinite}
+.loader span:nth-child(2){animation-delay:.2s}
+.loader span:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,80%,100%{transform:scale(0.7);opacity:.4}40%{transform:scale(1);opacity:1}}
 
-AutoScout24
-Activo
+@media(max-width:768px){
+  .sidebar{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
 
-mobile.de
-Activo
+<!-- ── CONFIG: pon aquí tus credenciales de Supabase ────────────── -->
+<script>
+const CONFIG = {
+  // Opción A: Supabase (base de datos en la nube, gratis)
+  supabase_url: "https://hkmfxnqvtklsynrfxjoc.supabase.co",   // ← pon tu URL de Supabase aquí
+  supabase_key: "sb_publishable_Pg7zX6lauC6LoKXhSr02mg_z6Zp307_",   // ← pon tu anon key de Supabase aquí
 
-Kleinanzeigen
-Activo
+  // Opción B: JSON local (si no usas Supabase, el scraper genera este archivo)
+  local_json: "../scraper/cars_data.json",
 
-leboncoin.fr
-Config.
+  // Gastos de importación (homologación + transporte)
+  import_costs: 6000,
+};
+</script>
+<!-- ──────────────────────────────────────────────────────────────── -->
 
-coches.net
-Ref. ES
+<div class="app">
 
-↻ Actualizar
-↓ Exportar CSV
-COCHES ENCONTRADOS
-—
-Cargando...
-MARGEN MEDIO
-—
-Sobre precio venta ES
-MEJOR BENEFICIO
-—
-—
-ACTUALIZADO
-—
-Próxima: 08:00
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo">AutoExport<small>Dashboard de sourcing</small></div>
 
+    <div class="slabel">País de origen</div>
+    <div class="fgroup" id="country-filters">
+      <div class="frow"><label><input type="checkbox" checked value="DE"> 🇩🇪 Alemania</label><span class="pill" id="cnt-DE">—</span></div>
+      <div class="frow"><label><input type="checkbox" checked value="FR"> 🇫🇷 Francia</label><span class="pill" id="cnt-FR">—</span></div>
+      <div class="frow"><label><input type="checkbox" checked value="BE"> 🇧🇪 Bélgica</label><span class="pill" id="cnt-BE">—</span></div>
+      <div class="frow"><label><input type="checkbox" checked value="PL"> 🇵🇱 Polonia</label><span class="pill" id="cnt-PL">—</span></div>
+      <div class="frow"><label><input type="checkbox" checked value="PT"> 🇵🇹 Portugal</label><span class="pill" id="cnt-PT">—</span></div>
+    </div>
 
+    <div class="slabel">Precio máx. compra</div>
+    <div class="fgroup">
+      <div class="slider-wrap">
+        <div class="slider-labels"><span>5.000€</span><strong id="pval">30.000€</strong><span>50.000€</span></div>
+        <input type="range" id="pslider" min="5000" max="50000" step="500" value="30000">
+      </div>
+    </div>
 
-✕
+    <div class="slabel">Categoría</div>
+    <div class="fgroup" id="cat-filters">
+      <div class="frow"><label><input type="checkbox" checked value="muscle"> Muscle / Americanos</label></div>
+      <div class="frow"><label><input type="checkbox" checked value="pickup"> Pickup Trucks</label></div>
+      <div class="frow"><label><input type="checkbox" checked value="suv"> SUV grandes</label></div>
+      <div class="frow"><label><input type="checkbox" checked value="sport"> Sport / Performance</label></div>
+      <div class="frow"><label><input type="checkbox" checked value="cabrio"> Descapotables</label></div>
+    </div>
 
+    <div class="slabel">Score mínimo</div>
+    <div class="fgroup">
+      <div class="slider-wrap">
+        <div class="slider-labels"><span>0</span><strong id="sval">60</strong><span>100</span></div>
+        <input type="range" id="sslider" min="0" max="100" step="5" value="60">
+      </div>
+    </div>
+
+    <div class="slabel">Fuentes</div>
+    <div class="fgroup">
+      <div class="src-item"><div class="src-dot" style="background:var(--brand)"></div><span class="src-name">AutoScout24</span><span class="src-badge ok">Activo</span></div>
+      <div class="src-item"><div class="src-dot" style="background:var(--brand)"></div><span class="src-name">mobile.de</span><span class="src-badge ok">Activo</span></div>
+      <div class="src-item"><div class="src-dot" style="background:var(--brand)"></div><span class="src-name">Kleinanzeigen</span><span class="src-badge ok">Activo</span></div>
+      <div class="src-item"><div class="src-dot" style="background:var(--warn)"></div><span class="src-name">leboncoin.fr</span><span class="src-badge cfg">Config.</span></div>
+      <div class="src-item"><div class="src-dot" style="background:var(--brand)"></div><span class="src-name">coches.net</span><span class="src-badge ok">Ref. ES</span></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <input class="search" type="text" id="search" placeholder="Buscar marca, modelo...">
+      <button class="btn-g" onclick="loadData()">↻ Actualizar</button>
+      <button class="btn" onclick="exportCSV()">↓ Exportar CSV</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="lbl">Coches encontrados</div><div class="val" id="s-total">—</div><div class="sub" id="s-sub">Cargando...</div></div>
+      <div class="stat"><div class="lbl">Margen medio</div><div class="val g" id="s-margin">—</div><div class="sub">Sobre precio venta ES</div></div>
+      <div class="stat"><div class="lbl">Mejor beneficio</div><div class="val g" id="s-best">—</div><div class="sub" id="s-bestname">—</div></div>
+      <div class="stat"><div class="lbl">Actualizado</div><div class="val" style="font-size:16px" id="s-time">—</div><div class="sub">Próxima: 08:00</div></div>
+    </div>
+
+    <div class="grid" id="grid">
+      <div class="loader"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="document.getElementById('modal-bg').classList.remove('open')">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ── Estado global ──────────────────────────────────────────────────
+let ALL_CARS = [];
+let FILTERED = [];
+const COST_IMPORT = CONFIG.import_costs || 6000;
+
+// ── Categoría por modelo ───────────────────────────────────────────
+const CAT_MAP = {
+  muscle: ["camaro","mustang","challenger","charger","corvette"],
+  pickup: ["ram","f-150","f-250","f150","f250","silverado","sierra","tundra","tacoma","ranger","bronco sport"],
+  suv:    ["tahoe","suburban","escalade","navigator","expedition","bronco","wrangler","suburban","yukon"],
+  sport:  ["m3","m4","m5","m8","amg","c63","e63","rs6","rs7","rs3","ct5-v","ct4-v","supra"],
+  cabrio: ["convertible","cabrio","roadster","spyder","spider","roadster"],
+};
+
+function getCategory(car) {
+  const t = (car.title || car.model || "").toLowerCase();
+  for (const [cat, keywords] of Object.entries(CAT_MAP)) {
+    if (keywords.some(k => t.includes(k))) return cat;
+  }
+  return "otro";
+}
+
+// ── Carga de datos ─────────────────────────────────────────────────
+async function loadData() {
+  document.getElementById("grid").innerHTML = '<div class="loader"><span></span><span></span><span></span></div>';
+
+  // Intenta Supabase primero, luego JSON local
+  if (CONFIG.supabase_url && CONFIG.supabase_key) {
+    await loadFromSupabase();
+  } else {
+    await loadFromJSON();
+  }
+}
+
+async function loadFromSupabase() {
+  try {
+    const url = `${CONFIG.supabase_url}/rest/v1/cars?select=*&order=opportunity_score.desc&limit=200`;
+    const res = await fetch(url, {
+      headers: {
+        "apikey": CONFIG.supabase_key,
+        "Authorization": `Bearer ${CONFIG.supabase_key}`,
+      }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    ALL_CARS = data.map(enrichCar);
+    applyFilters();
+  } catch(e) {
+    console.error("Supabase error:", e);
+    await loadFromJSON();
+  }
+}
+
+async function loadFromJSON() {
+  try {
+    const res = await fetch(CONFIG.local_json + "?t=" + Date.now());
+    if (!res.ok) throw new Error("No se encontró cars_data.json");
+    const data = await res.json();
+    ALL_CARS = (data.cars || []).map(enrichCar);
+    applyFilters();
+  } catch(e) {
+    // Si no hay datos, mostrar demo
+    loadDemoData();
+  }
+}
+
+function loadDemoData() {
+  ALL_CARS = [
+    {source:"mobile.de",title:"Chevrolet Camaro SS V8",make:"Chevrolet",model:"Camaro",year:2022,km:24000,price:28000,country:"DE",cv:420,opportunity_score:95,spain_ref_price:48000,url:"#"},
+    {source:"AutoScout24",title:"Ford Mustang GT 5.0",make:"Ford",model:"Mustang",year:2021,km:31000,price:26500,country:"DE",cv:450,opportunity_score:88,spain_ref_price:42000,url:"#"},
+    {source:"AutoScout24",title:"RAM 1500 TRX V8",make:"RAM",model:"1500 TRX",year:2021,km:40000,price:29000,country:"BE",cv:702,opportunity_score:97,spain_ref_price:55000,url:"#"},
+    {source:"mobile.de",title:"Ford F-150 Raptor",make:"Ford",model:"F-150",year:2022,km:28000,price:27500,country:"DE",cv:450,opportunity_score:94,spain_ref_price:51000,url:"#"},
+    {source:"Kleinanzeigen",title:"Dodge Challenger SRT Hellcat",make:"Dodge",model:"Challenger",year:2021,km:22000,price:27000,country:"PL",cv:717,opportunity_score:93,spain_ref_price:46000,url:"#"},
+    {source:"AutoScout24",title:"Jeep Wrangler Rubicon 392",make:"Jeep",model:"Wrangler",year:2022,km:21000,price:28000,country:"DE",cv:470,opportunity_score:90,spain_ref_price:52000,url:"#"},
+    {source:"AutoScout24",title:"Cadillac CT5-V Blackwing",make:"Cadillac",model:"CT5-V",year:2022,km:15000,price:28500,country:"BE",cv:668,opportunity_score:92,spain_ref_price:50000,url:"#"},
+    {source:"mobile.de",title:"Chevrolet Silverado High Country",make:"Chevrolet",model:"Silverado",year:2021,km:47000,price:25000,country:"DE",cv:420,opportunity_score:80,spain_ref_price:42000,url:"#"},
+  ].map(enrichCar);
+  applyFilters();
+  document.getElementById("s-sub").textContent = "Datos de demo";
+}
+
+function enrichCar(c) {
+  const totalCost = (c.price||0) + COST_IMPORT;
+  const spain = c.spain_ref_price || 0;
+  const profit = spain > 0 ? spain - totalCost : (c.estimated_profit || 0);
+  const marginPct = spain > 0 ? Math.round((profit / spain) * 100) : (c.margin_pct || 0);
+  return {
+    ...c,
+    category: getCategory(c),
+    total_cost: totalCost,
+    profit: profit,
+    margin_pct: marginPct,
+    opportunity_score: c.opportunity_score || 50,
+  };
+}
+
+// ── Filtros ────────────────────────────────────────────────────────
+function applyFilters() {
+  const maxPrice = parseInt(document.getElementById("pslider").value);
+  const minScore = parseInt(document.getElementById("sslider").value);
+  const search = document.getElementById("search").value.toLowerCase();
+  const countries = [...document.querySelectorAll("#country-filters input:checked")].map(x => x.value);
+  const cats = [...document.querySelectorAll("#cat-filters input:checked")].map(x => x.value);
+
+  FILTERED = ALL_CARS.filter(c => {
+    if (!countries.includes(c.country)) return false;
+    if (c.price > maxPrice) return false;
+    if ((c.opportunity_score||0) < minScore) return false;
+    if (search && !(c.title||"").toLowerCase().includes(search) && !(c.make||"").toLowerCase().includes(search)) return false;
+    if (cats.length && !cats.includes(c.category) && c.category !== "otro") {
+      // Si el coche no tiene categoría reconocida, mostrarlo igualmente
+    }
+    return true;
+  });
+
+  renderGrid();
+  updateStats();
+  updateCounts();
+}
+
+// ── Render ─────────────────────────────────────────────────────────
+const EMOJI_MAP = {muscle:"🏎️", pickup:"🛻", suv:"🚙", sport:"🏁", cabrio:"🌞", otro:"🚗"};
+const FLAG_MAP  = {DE:"🇩🇪", FR:"🇫🇷", BE:"🇧🇪", PL:"🇵🇱", PT:"🇵🇹"};
+const fmt = n => new Intl.NumberFormat("es-ES",{style:"currency",currency:"EUR",maximumFractionDigits:0}).format(n);
+
+function scoreClass(s) {
+  if (s >= 85) return "sc-hi";
+  if (s >= 65) return "sc-mid";
+  return "sc-lo";
+}
+function marginClass(m) { return m >= 30 ? "m-hi" : "m-mid"; }
+
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  if (!FILTERED.length) {
+    grid.innerHTML = '<div class="empty">Ningún coche con estos filtros.<br>Prueba subiendo el precio máximo o bajando el score mínimo.</div>';
+    return;
+  }
+  const sorted = [...FILTERED].sort((a,b) => (b.opportunity_score||0) - (a.opportunity_score||0));
+  grid.innerHTML = sorted.map(renderCard).join("");
+}
+
+function renderCard(c) {
+  const sc = c.opportunity_score || 0;
+  const profit = c.profit || 0;
+  const margin = c.margin_pct || 0;
+  const emoji = EMOJI_MAP[c.category] || "🚗";
+  const flag = FLAG_MAP[c.country] || c.country;
+
+  return `
+  <div class="card" onclick="openModal(${c.id || JSON.stringify(c).replace(/"/g,"'")})">
+    <div class="card-img">
+      ${emoji}
+      <div class="badge-src">${c.source||""}</div>
+      <div class="badge-score ${scoreClass(sc)}">★ ${sc}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${c.title || c.make + " " + c.model}</div>
+      <div class="card-sub">${c.year||"—"} · ${c.cv ? c.cv + " CV" : "—"} · ${c.km ? (c.km/1000).toFixed(0)+"k km" : "—"}</div>
+      <div class="tags">
+        <span class="tag">${flag} ${c.country}</span>
+        ${c.category !== "otro" ? `<span class="tag hl">${c.category}</span>` : ""}
+      </div>
+      <div class="price-row">
+        <div>
+          <div class="buy-price">${fmt(c.price)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">+ ${fmt(COST_IMPORT)} gastos</div>
+        </div>
+        <div class="profit-info">
+          <div class="mchip ${marginClass(margin)}">+${margin}%</div>
+          ${profit > 0 ? `<div class="profit-num">Benef. est.: <strong>+${fmt(profit)}</strong></div>` : ""}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── Modal detalle ──────────────────────────────────────────────────
+function openModal(carOrId) {
+  const c = typeof carOrId === "object"
+    ? carOrId
+    : (ALL_CARS.find(x => x.id === carOrId) || {});
+
+  const profit = c.profit || 0;
+  const totalCost = c.total_cost || (c.price + COST_IMPORT);
+  const spain = c.spain_ref_price || 0;
+
+  document.getElementById("modal-content").innerHTML = `
+    <div class="modal-title">${c.title || c.make + " " + c.model}</div>
+    <div class="modal-sub">${c.year||"—"} · ${c.country} · ${c.source}</div>
+
+    <div class="calc-row"><span class="clbl">Precio de compra</span><span class="cval r">-${fmt(c.price)}</span></div>
+    <div class="calc-row"><span class="clbl">Transporte estimado</span><span class="cval r">-${fmt(800)}</span></div>
+    <div class="calc-row"><span class="clbl">Homologación / ITV</span><span class="cval r">-${fmt(1500)}</span></div>
+    <div class="calc-row"><span class="clbl">Impuestos matrícula</span><span class="cval r">-${fmt(2500)}</span></div>
+    <div class="calc-row"><span class="clbl">Varios (gestión, etc.)</span><span class="cval r">-${fmt(1200)}</span></div>
+    <div class="calc-row"><span class="clbl"><strong>Coste total estimado</strong></span><span class="cval r"><strong>-${fmt(totalCost)}</strong></span></div>
+    <div class="calc-row"><span class="clbl">Precio venta ref. España</span><span class="cval g">+${spain > 0 ? fmt(spain) : "Sin datos"}</span></div>
+
+    <div class="calc-total">
+      <div><div class="tl">Beneficio estimado</div><div style="font-size:11px;color:var(--muted)">Margen: ${c.margin_pct||0}%</div></div>
+      <div class="tv">${profit > 0 ? "+" + fmt(profit) : fmt(profit)}</div>
+    </div>
+
+    ${c.url && c.url !== "#"
+      ? `<a class="modal-link" href="${c.url}" target="_blank" rel="noopener">Ver anuncio original →</a>`
+      : `<div style="text-align:center;margin-top:16px;color:var(--muted);font-size:12px">URL no disponible en datos de demo</div>`
+    }
+  `;
+
+  document.getElementById("modal-bg").classList.add("open");
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById("modal-bg")) {
+    document.getElementById("modal-bg").classList.remove("open");
+  }
+}
+
+// ── Stats ──────────────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById("s-total").textContent = FILTERED.length;
+  if (!FILTERED.length) return;
+  const avgM = Math.round(FILTERED.reduce((a,c) => a + (c.margin_pct||0), 0) / FILTERED.length);
+  document.getElementById("s-margin").textContent = "+" + avgM + "%";
+  const best = FILTERED.reduce((a,b) => (a.profit||0) > (b.profit||0) ? a : b);
+  document.getElementById("s-best").textContent = "+" + fmt(best.profit||0);
+  document.getElementById("s-bestname").textContent = (best.make||"") + " " + (best.model||"");
+  const now = new Date();
+  document.getElementById("s-time").textContent = now.toLocaleTimeString("es-ES", {hour:"2-digit",minute:"2-digit"});
+}
+
+function updateCounts() {
+  ["DE","FR","BE","PL","PT"].forEach(c => {
+    const el = document.getElementById("cnt-"+c);
+    if (el) el.textContent = ALL_CARS.filter(x => x.country === c).length;
+  });
+}
+
+// ── Export CSV ─────────────────────────────────────────────────────
+function exportCSV() {
+  const cols = ["title","year","km","price","country","cv","opportunity_score","profit","spain_ref_price","url","source"];
+  const rows = [cols.join(";")];
+  FILTERED.forEach(c => rows.push(cols.map(k => c[k]||"").join(";")));
+  const blob = new Blob([rows.join("\n")], {type:"text/csv;charset=utf-8;"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `autoexport_${new Date().toISOString().split("T")[0]}.csv`;
+  a.click();
+}
+
+// ── Event listeners ────────────────────────────────────────────────
+document.getElementById("pslider").addEventListener("input", function() {
+  document.getElementById("pval").textContent = parseInt(this.value).toLocaleString("es-ES") + "€";
+  applyFilters();
+});
+document.getElementById("sslider").addEventListener("input", function() {
+  document.getElementById("sval").textContent = this.value;
+  applyFilters();
+});
+document.getElementById("search").addEventListener("input", applyFilters);
+document.querySelectorAll("#country-filters input, #cat-filters input").forEach(el => {
+  el.addEventListener("change", applyFilters);
+});
+
+// ── Inicio ─────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
