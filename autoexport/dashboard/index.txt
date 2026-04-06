@@ -1,0 +1,73 @@
+AutoExport
+Dashboard de sourcing
+PAÍS DE ORIGEN
+
+🇩🇪 Alemania
+—
+
+🇫🇷 Francia
+—
+
+🇧🇪 Bélgica
+—
+
+🇵🇱 Polonia
+—
+
+🇵🇹 Portugal
+—
+PRECIO MÁX. COMPRA
+5.000€
+30.000€
+50.000€
+CATEGORÍA
+
+Muscle / Americanos
+
+Pickup Trucks
+
+SUV grandes
+
+Sport / Performance
+
+Descapotables
+SCORE MÍNIMO
+0
+60
+100
+FUENTES
+
+AutoScout24
+Activo
+
+mobile.de
+Activo
+
+Kleinanzeigen
+Activo
+
+leboncoin.fr
+Config.
+
+coches.net
+Ref. ES
+
+↻ Actualizar
+↓ Exportar CSV
+COCHES ENCONTRADOS
+—
+Cargando...
+MARGEN MEDIO
+—
+Sobre precio venta ES
+MEJOR BENEFICIO
+—
+—
+ACTUALIZADO
+—
+Próxima: 08:00
+
+
+
+✕
+
